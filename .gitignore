@@ -9,3 +9,9 @@ include/stream/*
 !bag/raw/.gitkeep
 !bag/compressed/.gitkeep
 !bag/undistorted/.gitkeep
+
+
+build/*
+install/*
+log/*
+pixi.lock*

@@ -31,7 +31,7 @@ jazzy360 = { features = ["jazzy360", "dev"] }
 # FEATURE 1: ROS 2 Jazzy360
 # -------------------------------------------------------------
 [feature.jazzy360]
-channels = ["https://prefix.dev/robostack-jazzy", "https://prefix.dev"]
+channels = ["https://prefix.dev/robostack-jazzy"]
 
 [feature.jazzy360.dependencies]
 colcon-common-extensions = "*"
