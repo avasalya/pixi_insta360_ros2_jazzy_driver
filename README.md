@@ -16,7 +16,7 @@ Thanks to the authors of original sources.
 
 This project uses `pixi` alongside `robostack-jazzy` binaries to handle systemic dependencies natively. 
 
-The **`insta360_ros_driver`** package is tracked directly inside this repository as an active development Git submodule. Dependencies required by the driver (such as `cv_bridge`, `imu_tools`, and `ffmpeg`) are configured natively via Pixi's package resolution layers—**there is no need to manually clone or compile any secondary source packages inside your `src/` workspace directory.** (unless you need to add more features)
+The **[insta360_ros_driver (forked)](https://github.com/avasalya/insta360_ros_driver/tree/ros2)** package is tracked directly inside this repository as an active development Git submodule. Dependencies required by the driver (such as `cv_bridge`, `imu_tools`, and `ffmpeg`) are configured natively via Pixi's package resolution layers—**there is no need to manually clone or compile any secondary source packages inside your `src/` workspace directory.** (unless you need to add more features)
 
 ## Workspace Build and Environment Management
 
@@ -119,9 +119,18 @@ pixi run -e jazzy360 colcon build --packages-select insta360_ros_driver --cmake-
 
 ---
 
-## Running the Driver Nodes
+# Running the INSTA360 ROS2 Nodes
 
-For detailed camera configuration, hardware permissions, and device rules mapping (such as setting up `/dev/insta` udev triggers), please refer directly to the [insta360_ros_driver Submodule Repository Instructions](https://github.com/avasalya/insta360_ros_driver/tree/ros2).
+For detailed camera configuration, hardware permissions, and device rules mapping (such as setting up `/dev/insta` udev triggers), follow instructions @ [Setup Insta360 Camera](https://github.com/avasalya/insta360_ros_driver/tree/ros2#setup-insta360-camera)
+
+
+
+## Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `pixi run -e jazzy360 setup` | Full setup: submodules and build |
+| `pixi run -e jazzy360 build` | Build packages with colcon |
 
 ```bash
 # Launch decoder node 
@@ -132,15 +141,7 @@ pixi run -e jazzy360 ros2 run insta360_ros_driver equirectangular_cpp
 ```
 
 
-## Available Commands
-
-| Command | Description |
-|---------|-------------|
-| `pixi run -e jazzy360 setup` | Full setup: submodules and build |
-| `pixi run -e jazzy360 build` | Build packages with colcon |
-
-
-## Development
+# Pixi Env Development
 
 Enter the pixi environment:
 ```bash
