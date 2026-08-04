@@ -1,0 +1,4 @@
+[submodule "src/insta360_ros_driver"]
+	path = src/insta360_ros_driver
+	url = git@github.com:avasalya/insta360_ros_driver.git
+	branch = ros2
