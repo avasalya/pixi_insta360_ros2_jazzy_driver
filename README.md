@@ -159,7 +159,7 @@ pxenv() {
         return 1
     fi
 
-    # Environment variables current directory context me load karega
+    # Load environment variables in current directory context
     eval "$(pixi shell-hook --manifest-path "$manifest" -e "$env_name")"
 }
 ```
