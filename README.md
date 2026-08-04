@@ -13,16 +13,23 @@ Thanks to the authors of original sources.
 
 # Quick Start
 
-## Prerequisites
+## Installation and Workspace Setup
+
+This project uses `pixi` alongside `robostack-jazzy` binaries to handle systemic dependencies natively. 
+
+The **`insta360_ros_driver`** package is tracked directly inside this repository as an active development Git submodule. Dependencies required by the driver (such as `cv_bridge`, `imu_tools`, and `ffmpeg`) are configured natively via Pixi's package resolution layers—**there is no need to manually clone or compile any secondary source packages inside your `src/` workspace directory.**
+
+## Workspace Build and Environment Management
+
+This repository provides two ways to build your ROS 2 environment: **Option A (Binary)** via Pixi's Robostack channel, and **Option B (Source Fallback)** if Pixi packages fail to solve or run properly on your local system layout.
+
+### Prerequisites
 
 Install pixi:
 ```bash
 curl -fsSL https://pixi.sh/install.sh | bash
 ```
 
-## Workspace Build and Environment Management
-
-This repository provides two ways to build your ROS 2 environment: **Option A (Binary)** via Pixi's Robostack channel, and **Option B (Source Fallback)** if Pixi packages fail to solve or run properly on your local system layout.
 
 ### Option A: Install via Pixi Binaries (Recommended)
 
@@ -30,6 +37,13 @@ This tracks system requirements directly in the virtual shell layer without floo
 
 This workspace utilizes `pixi` to isolate dependency variants across environments. 
 The driver dependencies (`cv_bridge`, `imu_tools`, `ffmpeg`) are configured natively via Pixi's `robostack-jazzy` channel, removing the need to track or build secondary source submodules.
+
+*Note: If you already cloned the repository without the `--recurse-submodules` flag, initialize the driver source folder manually before running the build step:*
+```bash
+git submodule update --init --recursive
+```
+
+othewise clone it with submodules
 
 ```bash
 # Clone with submodules
@@ -81,13 +95,13 @@ pixi run -e jazzy360 colcon build --symlink-install
 
 #### 3. Manual Colcon Selection with Pixi Contexts
 
-If you prefer building a specific workspace package or clearing a particular layout directory, pass your selective `colcon` directives natively through the pixi runner context:
+If you are iteratively testing code modifications within the `insta360_ros_driver` package and want to rebuild or pass custom compiler commands, execute them directly through the environment task runner context:
 
 ```bash
 # Build ONLY the insta360_ros_driver package within the jazzy360 context
 pixi run -e jazzy360 colcon build --packages-select insta360_ros_driver --symlink-install
 
-# Clean build a package by forcing CMake reconfiguration
+# Force Clean build a package by forcing CMake reconfiguration
 pixi run -e jazzy360 colcon build --packages-select insta360_ros_driver --cmake-clean-first
 ```
 
