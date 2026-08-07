@@ -14,7 +14,7 @@ Thanks to the authors of original sources.
 
 ## Installation and Workspace Setup
 
-This project uses `pixi` alongside `robostack-jazzy` binaries to handle systemic dependencies natively. 
+This project uses `pixi` alongside `robostack-jazzy` binaries to handle systemic dependencies natively.
 
 The **[insta360_ros_driver (forked)](https://github.com/avasalya/insta360_ros_driver/tree/ros2)** package is tracked directly inside this repository as an active development Git submodule. Dependencies required by the driver (such as `cv_bridge`, `imu_tools`, and `ffmpeg`) are configured natively via Pixi's package resolution layers—**there is no need to manually clone or compile any secondary source packages inside your `src/` workspace directory.** (unless you need to add more features)
 
@@ -25,7 +25,7 @@ This repository provides two ways to build your ROS 2 environment: **Option A (B
 ---
 
 ## Mandatory Hardware Setup: Install Proprietary Insta360 SDK
-Because the official Insta360 Camera SDK contains proprietary binaries, it cannot be packaged or downloaded automatically via Pixi or Git. You must request the official Linux SDK directly from [Insta360 SDK](https://www.insta360.com/developer/home). 
+Because the official Insta360 Camera SDK contains proprietary binaries, it cannot be packaged or downloaded automatically via Pixi or Git. You must request the official Linux SDK directly from [Insta360 SDK](https://www.insta360.com/developer/home).
 
 *Note: Ensure you are using the latest SDK build (released after April 23, 2025).*
 
@@ -53,7 +53,7 @@ curl -fsSL https://pixi.sh/install.sh | bash
 
 This tracks system requirements directly in the virtual shell layer without flooding your local `src` folder.
 
-This workspace utilizes `pixi` to isolate dependency variants across environments. 
+This workspace utilizes `pixi` to isolate dependency variants across environments.
 The driver dependencies (`cv_bridge`, `imu_tools`, `ffmpeg`) are configured natively via Pixi's `robostack-jazzy` channel, removing the need to track or build secondary source submodules.
 
 *Note: If you already cloned the repository without the `--recurse-submodules` flag, initialize the driver source folder manually before running the build step:*
@@ -64,9 +64,18 @@ git submodule update --init --recursive
 otherwise clone it with submodules:
 
 ```bash
-# Clone with submodules
-git clone --recurse-submodules https://github.com/avasalya/pixi_insta360_ros2_jazzy_driver 
+# 1. Clone with submodules
+git clone --recurse-submodules https://github.com/avasalya/pixi_insta360_ros2_jazzy_driver
 cd pixi_insta360_ros2_jazzy_driver
+
+# 2. Install the Pixi environment from pixi.toml
+pixi install
+
+# 3. Download and build CUDA-enabled FFmpeg into the Pixi environment
+pixi run -e jazzy360 ffmpeg
+
+# 4. Build the ROS workspace
+pixi run -e jazzy360 setup
 
 # Setup: install dependencies and build
 pixi run -e jazzy360 setup
@@ -77,13 +86,13 @@ pixi run -e jazzy360 setup
 To build your targeted environment completely, utilize the defined environment flag tasks:
 
 ```bash
-# Build the Jazzy360 Driver environment 
+# Build the Jazzy360 Driver environment
 pixi run -e jazzy360 build
 ```
 
 ---
 
-### Option B: Install From Source Fallback
+### Option B: Install From Source Fallback (Tricky)
 
 If Pixi channels throw package resolution/solving errors on your environment, compile the missing packages inside your local `src/` directory instead.
 
@@ -129,11 +138,14 @@ For detailed camera configuration, hardware permissions, and device rules mappin
 
 | Command | Description |
 |---------|-------------|
+| `pixi run -e jazzy360 update` | when new packages are added to pixi.toml |
 | `pixi run -e jazzy360 setup` | Full setup: submodules and build |
 | `pixi run -e jazzy360 build` | Build packages with colcon |
+| `pixi add --features jazzy360 XXX_package_XXX` | add missing package |
+
 
 ```bash
-# Launch decoder node 
+# Launch decoder node
 pixi run -e jazzy360 ros2 run insta360_ros_driver decoder
 
 # Launch equirectangular node
