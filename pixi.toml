@@ -4,14 +4,17 @@ name = "pixi_insta360_ros2_jazzy_driver"
 version = "0.1.0"
 channels = ["https://fast.prefix.dev/conda-forge"]
 platforms = ["linux-64"]
-conda-pypi-map = false 
+conda-pypi-map = false
+
+[system-requirements]
+cuda = "12"
 
 [activation]
 scripts = ["scripts/set_ros_env.sh", "install/setup.bash"]
 
 # Base C++ / Build tools included in EVERY environment
 [dependencies]
-python = "*"
+python = "3.12.*"
 compilers = "*"
 cmake = "*"
 pkg-config = "*"
@@ -25,13 +28,13 @@ libgl-devel = "*"
 # ENVIRONMENT DEFINITIONS
 # -------------------------------------------------------------
 [environments]
-jazzy360 = { features = ["jazzy360", "dev"] } 
+jazzy360 = { features = ["jazzy360", "dev"] }
 
 # -------------------------------------------------------------
 # FEATURE 1: ROS 2 Jazzy360
 # -------------------------------------------------------------
 [feature.jazzy360]
-channels = ["https://prefix.dev/robostack-jazzy"]
+channels = ["https://prefix.dev/robostack-jazzy", "conda-forge"]
 
 [feature.jazzy360.dependencies]
 colcon-common-extensions = "*"
@@ -56,6 +59,11 @@ ros-jazzy-imu-filter-madgwick = "*"
 ffmpeg = "*"
 ros-jazzy-image-view = ">=5.0.11,<6"
 ros-jazzy-rqt-image-view = ">=1.3.0,<2"
+
+[feature.jazzy360.pypi-dependencies]
+torch = { version = "~=2.4.1", index = "https://download.pytorch.org/whl/cu124" }
+torchvision = { version = "*", index = "https://download.pytorch.org/whl/cu124" }
+torchaudio = { version = "*", index = "https://download.pytorch.org/whl/cu124" }
 
 [feature.jazzy360.tasks]
 update-submodules = "git submodule update --init --recursive"
