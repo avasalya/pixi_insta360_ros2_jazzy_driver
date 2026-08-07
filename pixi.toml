@@ -3,11 +3,8 @@ authors = ["Ashesh Vasalya <asheshvasalya@gmail.com>"]
 name = "pixi_insta360_ros2_jazzy_driver"
 version = "0.1.0"
 channels = ["https://fast.prefix.dev/conda-forge"]
-platforms = ["linux-64"]
+platforms = [{ platform = "linux-64", cuda = "12" }]
 conda-pypi-map = false
-
-[system-requirements]
-cuda = "12"
 
 [activation]
 scripts = ["scripts/set_ros_env.sh", "install/setup.bash"]
@@ -20,6 +17,9 @@ cmake = "*"
 pkg-config = "*"
 make = "*"
 ninja = "*"
+nasm = "*"
+yasm = "*"
+perl = "*"
 
 [target.linux.dependencies]
 libgl-devel = "*"
@@ -56,7 +56,6 @@ ros-jazzy-std-msgs = "*"
 ros-jazzy-std-srvs = "*"
 ros-jazzy-imu-tools = "*"
 ros-jazzy-imu-filter-madgwick = "*"
-ffmpeg = "*"
 ros-jazzy-image-view = ">=5.0.11,<6"
 ros-jazzy-rqt-image-view = ">=1.3.0,<2"
 
@@ -69,6 +68,43 @@ torchaudio = { version = "*", index = "https://download.pytorch.org/whl/cu124" }
 update-submodules = "git submodule update --init --recursive"
 build = "colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -Wno-dev --symlink-install"
 setup = { depends-on = ["update-submodules", "build"] }
+
+ffmpeg-download = """
+rm -rf external/FFmpeg external/nv-codec-headers
+git clone https://github.com/FFmpeg/nv-codec-headers.git external/nv-codec-headers
+git clone https://github.com/FFmpeg/FFmpeg.git external/FFmpeg
+"""
+
+ffmpeg-build = """
+cd external/nv-codec-headers
+make PREFIX=$CONDA_PREFIX install
+
+cd ../FFmpeg
+
+./configure \
+    --prefix=$CONDA_PREFIX \
+    --enable-shared \
+    --disable-static \
+    --enable-gpl \
+    --enable-nonfree \
+    --enable-cuda \
+    --enable-ffnvcodec \
+    --enable-libnpp \
+    --enable-nvenc \
+    --extra-cflags=-I/usr/local/cuda/include \
+    --extra-ldflags=-L/usr/local/cuda/lib64
+
+make -j$(nproc)
+make install
+"""
+
+ffmpeg = { depends-on = ["ffmpeg-download", "ffmpeg-build"] }
+
+# run these commands to install and build ffmpeg with CUDA support
+# pixi update
+# pixi install
+# pixi run ffmpeg
+
 
 # -------------------------------------------------------------
 # SHARED DEV TOOLS
